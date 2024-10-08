@@ -19,11 +19,7 @@ export default function Header() {
       style={{ backgroundColor: '#2e2e2e', color: '#ffffff' }}
     >
       <Box display="flex" alignItems="center" gap={2}>
-        <img
-          src="/src/assets/gs-icon.png"
-          alt="Logo"
-          style={{ height: '50px' }}
-        />
+        <img src="/gs-icon.png" alt="Logo" style={{ height: '50px' }} />
         <Typography variant="h6">Grupo El Surco</Typography>
       </Box>
       <Button variant="outlined" color="primary" onClick={handleLogout}>

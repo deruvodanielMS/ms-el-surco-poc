@@ -45,7 +45,7 @@ export default function Login() {
         }}
       >
         <img
-          src="/src/assets/gs-icon.png"
+          src="/gs-icon.png"
           alt="logo"
           style={{ width: '150px', height: '150px' }}
         />
