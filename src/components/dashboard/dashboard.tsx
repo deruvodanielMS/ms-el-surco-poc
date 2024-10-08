@@ -9,10 +9,25 @@ declare global {
     Dropbox: any;
   }
 }
+
 export default function Dashboard() {
   const embedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const loadDropboxScript = () => {
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://www.dropbox.com/static/api/2/dropins.js';
+      script.id = 'dropboxjs';
+      script.setAttribute('data-app-key', import.meta.env.VITE_DROPBOX_APP_KEY);
+      script.async = true;
+      document.body.appendChild(script);
+
+      script.onload = () => {
+        loadDropbox();
+      };
+    };
+
     const loadDropbox = () => {
       if (window.Dropbox && embedRef.current) {
         embedRef.current.innerHTML = '';
@@ -29,13 +44,10 @@ export default function Dashboard() {
       }
     };
 
-    if (window.Dropbox) {
-      loadDropbox();
+    if (!document.getElementById('dropboxjs')) {
+      loadDropboxScript();
     } else {
-      const script = document.getElementById('dropboxjs');
-      if (script) {
-        script.addEventListener('load', loadDropbox);
-      }
+      loadDropbox();
     }
 
     return () => {
