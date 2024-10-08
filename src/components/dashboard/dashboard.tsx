@@ -1,82 +1,168 @@
-import { Box, Container, Typography } from '@mui/material';
-import { useEffect, useRef } from 'react';
-import Footer from '../footer/footer';
-import Header from '../header/header';
+import {
+  Box,
+  Chip,
+  Container,
+  Grid,
+  Skeleton,
+  Typography,
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import {
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+} from 'recharts';
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Dropbox: any;
-  }
+import { Order, orderDataOverTime, orders } from '../../mock-data/mock-data';
+import DashboardLayout from '../layouts/dashboard-layout';
+
+function OrderStatus({ status }: { status: string }) {
+  const getColor = () => {
+    switch (status) {
+      case 'Pending':
+        return 'warning';
+      case 'Shipped':
+        return 'primary';
+      case 'Delivered':
+        return 'success';
+      case 'Cancelled':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  return <Chip label={status} color={getColor()} />;
 }
 
+// Colores para cada porción del gráfico
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+const calculateOrderStatusData = (orders: Order[]) => {
+  const statusMap: { [key: string]: number } = orders.reduce(
+    (acc: { [key: string]: number }, order: Order) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    },
+    {},
+  );
+
+  return Object.keys(statusMap).map((status) => ({
+    name: status,
+    value: statusMap[status],
+  }));
+};
+
+// Datos calculados a partir de tus órdenes
+const pieChartData = calculateOrderStatusData(orders);
+
 export default function Dashboard() {
-  const embedRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
 
+  // Simula una carga de datos de 3 segundos
   useEffect(() => {
-    const loadDropboxScript = () => {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://www.dropbox.com/static/api/2/dropins.js';
-      script.id = 'dropboxjs';
-      script.setAttribute('data-app-key', import.meta.env.VITE_DROPBOX_APP_KEY);
-      script.async = true;
-      document.body.appendChild(script);
-
-      script.onload = () => {
-        loadDropbox();
-      };
-    };
-
-    const loadDropbox = () => {
-      if (window.Dropbox && embedRef.current) {
-        embedRef.current.innerHTML = '';
-
-        const options = {
-          link: 'https://www.dropbox.com/scl/fo/hdbby8obdwrvolxdxhsw2/ADVJbu8Bm4VNLPvO28bdCtI?rlkey=rlp7vz5ajl1dya1ty5a5c3l0g&st=m8xnck3h&dl=0',
-          folder: {
-            view: 'list',
-            headerSize: 'normal',
-          },
-        };
-
-        window.Dropbox.embed(options, embedRef.current);
-      }
-    };
-
-    if (!document.getElementById('dropboxjs')) {
-      loadDropboxScript();
-    } else {
-      loadDropbox();
-    }
-
-    return () => {
-      if (embedRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        embedRef.current.innerHTML = '';
-      }
-    };
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <>
-      <Header />
+    <DashboardLayout>
       <Container>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          minHeight="100vh"
-        >
-          <Typography variant="h4" gutterBottom>
-            Dropbox Folder
-          </Typography>
+        <Typography variant="h4" gutterBottom my={5}>
+          Dashboard
+        </Typography>
 
-          <div ref={embedRef} style={{ width: '100%', height: '500px' }}></div>
-        </Box>
+        <Grid container spacing={4}>
+          {/* Gráfico de Pastel */}
+          <Grid item xs={12} md={8}>
+            <Typography variant="h6" gutterBottom>
+              Orders by Status
+            </Typography>
+            {loading ? (
+              <Skeleton variant="rectangular" height={300} />
+            ) : (
+              <>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={pieChartData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label
+                    >
+                      {pieChartData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={orderDataOverTime}>
+                    <Line type="monotone" dataKey="orders" stroke="#8884d8" />
+                    <CartesianGrid stroke="#ccc" />
+                    <XAxis dataKey="name" />
+
+                    <Tooltip />
+                  </LineChart>
+                </ResponsiveContainer>
+              </>
+            )}
+          </Grid>
+
+          {/* Tabla de Órdenes */}
+          <Grid item xs={12} md={4}>
+            <Typography variant="h6" gutterBottom>
+              Recent Orders
+            </Typography>
+            {loading ? (
+              <Box>
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+                <Skeleton variant="text" />
+              </Box>
+            ) : (
+              <Box>
+                {orders.map((order) => (
+                  <Box
+                    key={order.id}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      p: 1.5,
+                      mb: 1,
+                      backgroundColor: '#d9d9d9',
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Typography variant="caption">{order.details}</Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      <OrderStatus status={order.status} />
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Grid>
+        </Grid>
       </Container>
-      <Footer />
-    </>
+    </DashboardLayout>
   );
 }

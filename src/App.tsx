@@ -6,7 +6,9 @@ import {
   Routes,
 } from 'react-router-dom';
 import DashboardRoute from './routes/dashboard';
+import FilesRoute from './routes/files';
 import LoginRoute from './routes/login';
+import OrdersRoute from './routes/orders';
 import theme from './theme';
 
 export default function App() {
@@ -15,6 +17,8 @@ export default function App() {
       <CssBaseline />
       <Router>
         <Routes>
+          <Route path="/files" element={<FilesRoute />} />
+          <Route path="/orders" element={<OrdersRoute />} />
           <Route path="/login" element={<LoginRoute />} />
           <Route path="/dashboard" element={<DashboardRoute />} />
           <Route path="*" element={<Navigate to="/login" />} />

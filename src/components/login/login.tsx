@@ -2,7 +2,7 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockUsers } from './mock-users';
+import { mockUsers } from '../../mock-data/mock-users';
 
 export default function Login() {
   const [username, setUsername] = useState('');
