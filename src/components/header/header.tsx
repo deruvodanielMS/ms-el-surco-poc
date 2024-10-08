@@ -32,9 +32,10 @@ export default function Header() {
 
   // Ítems de navegación
   const navItems = [
+    { name: 'Dashboard', path: '/dashboard' },
     { name: 'Órdenes', path: '/orders' },
     { name: 'Archivos', path: '/files' },
-    { name: 'Chat', path: '/chat' },
+    { name: 'Chat', path: '/dashboard' },
   ];
 
   const renderNavItems = () => (
