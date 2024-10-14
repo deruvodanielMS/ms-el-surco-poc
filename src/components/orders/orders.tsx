@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   Chip,
-  Container,
   Paper,
   Table,
   TableBody,
@@ -16,26 +15,14 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { orders } from '../../mock-data/mock-data';
+import { getColorByStatus } from '../../utils/color-utils';
 import DashboardLayout from '../layouts/dashboard-layout';
 
 // Componente de estado con Chip
 function OrderStatus({ status }: { status: string }) {
-  const getColor = () => {
-    switch (status) {
-      case 'Pending':
-        return 'warning';
-      case 'Shipped':
-        return 'primary';
-      case 'Delivered':
-        return 'success';
-      case 'Cancelled':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
+  const color = getColorByStatus(status);
 
-  return <Chip label={status} color={getColor()} />;
+  return <Chip label={status} sx={{ backgroundColor: color, color: '#000' }} />;
 }
 
 // Componente principal de Orders
@@ -93,13 +80,11 @@ export default function Orders() {
 
   return (
     <DashboardLayout>
-      <Container>
-        <Typography variant="h4" gutterBottom my={4}>
-          Orders
-        </Typography>
-        {/* Mostrar vista de tabla o de tarjetas dependiendo del tamaño de la pantalla */}
-        {isMobile ? <CardView /> : <TableView />}
-      </Container>
+      <Typography variant="h4" gutterBottom my={4}>
+        Orders
+      </Typography>
+      {/* Mostrar vista de tabla o de tarjetas dependiendo del tamaño de la pantalla */}
+      {isMobile ? <CardView /> : <TableView />}
     </DashboardLayout>
   );
 }

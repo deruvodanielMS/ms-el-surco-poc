@@ -7,7 +7,8 @@ import {
   BrowserRouter as Router,
   Routes,
 } from 'react-router-dom';
-import ChatbotRoute from './routes/chat';
+import { UserProvider } from './context/user-context';
+import ChatRoute from './routes/chat';
 import DashboardRoute from './routes/dashboard';
 import FilesRoute from './routes/files';
 import LoginRoute from './routes/login';
@@ -16,18 +17,21 @@ import theme from './theme';
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/chatbot" element={<ChatbotRoute />} />
-          <Route path="/files" element={<FilesRoute />} />
-          <Route path="/orders" element={<OrdersRoute />} />
-          <Route path="/login" element={<LoginRoute />} />
-          <Route path="/dashboard" element={<DashboardRoute />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+
+        <Router>
+          <Routes>
+            <Route path="/chat" element={<ChatRoute />} />
+            <Route path="/files" element={<FilesRoute />} />
+            <Route path="/orders" element={<OrdersRoute />} />
+            <Route path="/login" element={<LoginRoute />} />
+            <Route path="/dashboard" element={<DashboardRoute />} />
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
+    </UserProvider>
   );
 }

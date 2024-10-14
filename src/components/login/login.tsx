@@ -1,11 +1,14 @@
+// src/pages/login/Login.tsx
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { useUser } from '../../context/user-context';
 import { mockUsers } from '../../mock-data/mock-users';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const { setUsername } = useUser(); // Accede al contexto
+  const [username, setLocalUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -16,6 +19,7 @@ export default function Login() {
     );
     if (user) {
       setError('');
+      setUsername(username); // Guarda el nombre de usuario en el contexto
       localStorage.setItem('auth', 'true');
       navigate('/dashboard');
     } else {
@@ -34,7 +38,6 @@ export default function Login() {
         padding: '20px',
       }}
     >
-      {/* Logo y Título */}
       <Box
         sx={{
           display: 'flex',
@@ -54,7 +57,6 @@ export default function Login() {
         </Typography>
       </Box>
 
-      {/* Formulario de Login */}
       <Box
         sx={{
           display: 'flex',
@@ -73,7 +75,7 @@ export default function Login() {
         <TextField
           label="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setLocalUsername(e.target.value)}
           margin="normal"
           fullWidth
         />

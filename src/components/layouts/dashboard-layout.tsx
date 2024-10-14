@@ -1,6 +1,6 @@
 import { Box, Container } from '@mui/material';
-import Footer from '../footer/footer';
-import Header from '../header/header';
+import Footer from '../nav/footer/footer';
+import Header from '../nav/header/header';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
         <Box
           display="flex"
           flexDirection="column"
-          alignItems="center"
+          alignItems="start"
           justifyContent="start"
           minHeight="100vh"
         >
