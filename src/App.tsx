@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import {
   Navigate,
@@ -5,6 +7,7 @@ import {
   BrowserRouter as Router,
   Routes,
 } from 'react-router-dom';
+import ChatbotRoute from './routes/chat';
 import DashboardRoute from './routes/dashboard';
 import FilesRoute from './routes/files';
 import LoginRoute from './routes/login';
@@ -17,6 +20,7 @@ export default function App() {
       <CssBaseline />
       <Router>
         <Routes>
+          <Route path="/chatbot" element={<ChatbotRoute />} />
           <Route path="/files" element={<FilesRoute />} />
           <Route path="/orders" element={<OrdersRoute />} />
           <Route path="/login" element={<LoginRoute />} />

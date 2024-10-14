@@ -35,7 +35,7 @@ export default function Header() {
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Órdenes', path: '/orders' },
     { name: 'Archivos', path: '/files' },
-    { name: 'Chat', path: '/dashboard' },
+    { name: 'Chat', path: '/chatbot' },
   ];
 
   const renderNavItems = () => (
