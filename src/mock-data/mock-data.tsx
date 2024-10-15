@@ -1,5 +1,4 @@
 // Datos de órdenes simulados
-
 import { Chat, Order } from '../types/data';
 
 const orders: Order[] = [
@@ -53,13 +52,13 @@ const orders: Order[] = [
   },
 ];
 
-// Datos para el gráfico de pedidos a lo largo del tiempo
+// Datos para la comparativa entre dos años
 const orderDataOverTime = [
-  { name: 'Semana 1', orders: 20 },
-  { name: 'Semana 2', orders: 25 },
-  { name: 'Semana 3', orders: 15 },
-  { name: 'Semana 4', orders: 30 },
-  { name: 'Semana 5', orders: 50 },
+  { name: 'Semana 1', '2023': 20, '2024': 30 },
+  { name: 'Semana 2', '2023': 25, '2024': 35 },
+  { name: 'Semana 3', '2023': 15, '2024': 25 },
+  { name: 'Semana 4', '2023': 30, '2024': 40 },
+  { name: 'Semana 5', '2023': 50, '2024': 45 },
 ];
 
 const chats: Chat[] = [
@@ -71,7 +70,7 @@ const chats: Chat[] = [
     messages: [
       {
         sender: 'Sistema',
-        text: 'Gracias por su compra. Su orden de maquinaria agrícola está siendo preparada.',
+        text: `Mensaje Automático del Sistema\nConfirmación de Orden N.º 12345\nEstimado [Marc Perez],\nGracias por su compra. Su orden de maquinaria agrícola ha sido procesada y actualmente está siendo preparada para el envío.\nLe notificaremos cuando su pedido esté en camino.\nSaludos,\nEl Surco`,
         timestamp: '10:30 AM',
       },
       {
@@ -86,7 +85,18 @@ const chats: Chat[] = [
     user: 'Vivian Villar',
     orderDetails: 'Orden para distribución de combustible',
     unread: true,
-    messages: [],
+    messages: [
+      {
+        sender: 'Sistema',
+        text: `Mensaje Automático del Sistema\nConfirmación de Orden N.º 67890\nEstimada [Vivian Villar],\nGracias por su compra. Su orden de distribución de combustible está en proceso y pronto será despachada.\nNos pondremos en contacto para confirmar la entrega.\nSaludos,\nEl Surco`,
+        timestamp: '9:00 AM',
+      },
+      {
+        sender: 'Vivian Villar',
+        text: `Tengo problemas para recibir el pedido. Pueden ayudarme?`,
+        timestamp: '10:30 AM',
+      },
+    ],
   },
   {
     id: 3,
@@ -94,6 +104,11 @@ const chats: Chat[] = [
     orderDetails: 'Orden para lubricantes de petróleo',
     unread: false,
     messages: [
+      {
+        sender: 'Sistema',
+        text: `Mensaje Automático del Sistema\nConfirmación de Orden N.º 12345\nEstimado [Cristian Vargas],\nGracias por su compra. Su orden de maquinaria agrícola ha sido procesada y actualmente está siendo preparada para el envío.\nLe notificaremos cuando su pedido esté en camino.\nSaludos,\nEl Surco`,
+        timestamp: '10:30 AM',
+      },
       {
         sender: 'Sistema',
         text: 'Su pedido de lubricantes está en camino y llegará el 20 de octubre.',
@@ -111,7 +126,18 @@ const chats: Chat[] = [
     user: 'Adriana Vargas Villar',
     orderDetails: 'Orden para tractores de construcción',
     unread: true,
-    messages: [],
+    messages: [
+      {
+        sender: 'Sistema',
+        text: `Mensaje Automático del Sistema\nConfirmación de Orden N.º 54321\nEstimada [Adriana Vargas Villar],\nSu orden de tractores de construcción ha sido confirmada y se encuentra en preparación.\nLe notificaremos cuando esté lista para ser enviada.\nSaludos,\nEl Surco`,
+        timestamp: '8:45 AM',
+      },
+      {
+        sender: 'Adriana Vargas Villar',
+        text: `Necesito saber si el flete tiene valor adicional.`,
+        timestamp: '8:45 AM',
+      },
+    ],
   },
   {
     id: 5,
@@ -119,6 +145,11 @@ const chats: Chat[] = [
     orderDetails: 'Orden para bombas de irrigación',
     unread: false,
     messages: [
+      {
+        sender: 'Sistema',
+        text: `Mensaje Automático del Sistema\nConfirmación de Orden N.º 12345\nEstimado [Rodrigo Zambrana],\nGracias por su compra. Su orden de maquinaria agrícola ha sido procesada y actualmente está siendo preparada para el envío.\nLe notificaremos cuando su pedido esté en camino.\nSaludos,\nEl Surco`,
+        timestamp: '10:30 AM',
+      },
       {
         sender: 'Sistema',
         text: 'Su pedido de bombas de irrigación fue entregado el 10 de octubre.',

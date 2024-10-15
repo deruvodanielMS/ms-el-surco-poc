@@ -9,7 +9,16 @@ interface OrderStatusProps {
 const OrderStatus: React.FC<OrderStatusProps> = ({ status }) => {
   const color = getColorByStatus(status);
 
-  return <Chip label={status} sx={{ backgroundColor: color, color: '#000' }} />;
+  return (
+    <Chip
+      label={status}
+      sx={{
+        backgroundColor: color,
+        color: '#000',
+        height: '20px',
+      }}
+    />
+  );
 };
 
 export default OrderStatus;

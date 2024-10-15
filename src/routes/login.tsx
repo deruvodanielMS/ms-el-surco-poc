@@ -1,5 +1,5 @@
-import Login from '../components/login/login';
+import LoginScreen from '../components/login/login-screen';
 
 export default function LoginRoute() {
-  return <Login />;
+  return <LoginScreen />;
 }

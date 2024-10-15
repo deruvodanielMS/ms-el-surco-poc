@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText } from '@mui/material';
+import { List, ListItem, Typography } from '@mui/material';
 import CustomLink from '../ui/custom-link';
 
 interface NavItemsProps {
@@ -8,11 +8,15 @@ interface NavItemsProps {
 
 export default function NavItems({ navItems, onItemClick }: NavItemsProps) {
   return (
-    <List>
+    <List sx={{ marginTop: 4 }}>
       {navItems.map((item) => (
-        <ListItem key={item.name} onClick={() => onItemClick?.(item)}>
-          <CustomLink to={item.path} underline>
-            <ListItemText primary={item.name} />
+        <ListItem
+          key={item.name}
+          onClick={() => onItemClick?.(item)}
+          sx={{ paddingLeft: 0, marginBottom: '32px' }}
+        >
+          <CustomLink to={item.path} underline boldOnHover>
+            <Typography variant="subtitle1">{item.name}</Typography>
           </CustomLink>
         </ListItem>
       ))}

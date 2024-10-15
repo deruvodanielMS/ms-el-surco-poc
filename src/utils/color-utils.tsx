@@ -7,7 +7,7 @@ export const getColorByStatus = (status: string): string => {
     case 'Enviado':
       return theme.palette.info.main;
     case 'Entregado':
-      return theme.palette.success.main;
+      return theme.palette.primary.main;
     case 'Cancelado':
       return theme.palette.error.main;
     default:

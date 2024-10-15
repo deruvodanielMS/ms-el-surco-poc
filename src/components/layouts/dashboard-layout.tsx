@@ -17,6 +17,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
           alignItems="start"
           justifyContent="start"
           minHeight="100vh"
+          pb={4}
         >
           {children}
         </Box>

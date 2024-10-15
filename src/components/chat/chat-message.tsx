@@ -1,31 +1,34 @@
 import { Box, Paper, Typography } from '@mui/material';
+import theme from '../../theme';
 
 interface ChatMessageProps {
   text: string;
   sender: string;
   timestamp: string;
-  isUser: boolean;
+  isSystem: boolean;
 }
 
 export default function ChatMessage({
   text,
   timestamp,
-  isUser,
+  isSystem,
 }: ChatMessageProps) {
   return (
     <Box
       sx={{
         marginBottom: 2,
         display: 'flex',
-        flexDirection: isUser ? 'row-reverse' : 'row',
+        flexDirection: isSystem ? 'row-reverse' : 'row',
       }}
     >
       <Paper
         sx={{
           padding: 2,
-          backgroundColor: isUser ? '#89BCD8' : '#F0F0F0',
+          backgroundColor: isSystem
+            ? theme.palette.secondary.light
+            : theme.palette.grey[50],
           maxWidth: '70%',
-          borderRadius: '12px',
+          borderRadius: isSystem ? '24px 24px 0 24px' : '24px 24px 24px 0',
         }}
       >
         <Typography variant="body1">{text}</Typography>

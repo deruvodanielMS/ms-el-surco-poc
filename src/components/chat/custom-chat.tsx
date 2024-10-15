@@ -20,15 +20,23 @@ export default function CustomChat() {
         ...activeChat,
         messages: [
           ...activeChat.messages,
-          { sender: 'Yo', text: newMessage, timestamp: 'Ahora' },
+          {
+            sender: 'Sistema',
+            text: newMessage,
+            timestamp: new Date().toLocaleTimeString(),
+          },
         ],
       };
 
+      // Actualizar la lista de chats con los mensajes nuevos
       setChats((prevChats) =>
         prevChats.map((chat) =>
           chat.id === updatedChat.id ? updatedChat : chat,
         ),
       );
+
+      // Actualizar el chat activo para reflejar los cambios de inmediato
+      setActiveChat(updatedChat);
       setNewMessage('');
     }
   };
@@ -58,10 +66,31 @@ export default function CustomChat() {
           )
         ) : (
           <>
-            <Grid item xs={4}>
+            <Grid
+              item
+              xs={4}
+              sx={{
+                border: '1px solid',
+                borderColor: theme.palette.grey[100],
+                borderRadius: '24px 0 0 24px ',
+                paddingY: '24px',
+                paddingLeft: '0 !important',
+                minHeight: '100%',
+              }}
+            >
               <ChatList chats={chats} onChatSelect={setActiveChat} />
             </Grid>
-            <Grid item xs={8}>
+            <Grid
+              item
+              xs={8}
+              sx={{
+                border: '1px solid',
+                borderColor: theme.palette.grey[100],
+                borderRadius: '0 24px 24px 0',
+                padding: '24px',
+                height: '100%',
+              }}
+            >
               {activeChat ? (
                 <ChatView
                   activeChat={activeChat}

@@ -1,4 +1,6 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
+import { useEffect, useRef } from 'react';
 import { Chat } from '../../types/data';
 import ChatMessage from './chat-message';
 
@@ -17,12 +19,22 @@ export default function ChatView({
   onSendMessage,
   onBack,
 }: ChatViewProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Desplazar hacia el último mensaje automáticamente
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeChat.messages]);
+
   return (
     <>
       {onBack && (
-        <Button onClick={onBack} sx={{ marginBottom: 2 }}>
+        <Typography
+          onClick={onBack}
+          sx={{ marginBottom: 2, cursor: 'pointer', color: 'secondary.main' }}
+        >
           Volver
-        </Button>
+        </Typography>
       )}
 
       <Typography variant="h6" gutterBottom>
@@ -46,9 +58,10 @@ export default function ChatView({
             text={message.text}
             sender={message.sender}
             timestamp={message.timestamp}
-            isUser={message.sender === 'Yo'}
+            isSystem={message.sender === 'Sistema'}
           />
         ))}
+        <div ref={messagesEndRef} />
       </Box>
 
       <Box display="flex" alignItems="center">
@@ -59,9 +72,22 @@ export default function ChatView({
           onChange={(e) => onMessageChange(e.target.value)}
           sx={{ marginRight: 2 }}
         />
-        <Button variant="contained" color="primary" onClick={onSendMessage}>
-          Enviar
-        </Button>
+        <IconButton
+          onClick={onSendMessage}
+          sx={{
+            backgroundColor: 'secondary.main',
+            color: 'white',
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            '&:hover': {
+              backgroundColor: 'secondary.dark',
+            },
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <ArrowForwardIcon />
+        </IconButton>
       </Box>
     </>
   );

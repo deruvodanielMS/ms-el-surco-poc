@@ -1,0 +1,26 @@
+.custom-dots {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-dots li {
+  margin: 0 8px;
+}
+
+.custom-dots .slick-active div {
+  width: 30px; /* Dot activo más largo */
+  transition: width 0.3s ease;
+}
+
+.custom-dots div {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 25px;
+  transition: width 0.3s ease;
+}

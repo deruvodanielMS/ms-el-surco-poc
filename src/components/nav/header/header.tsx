@@ -1,4 +1,4 @@
-import { Box, Container, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import DesktopNav from './desktop-nav';
@@ -25,18 +25,17 @@ export default function Header() {
     <Box
       display="flex"
       alignItems="center"
-      justifyContent="center"
+      justifyContent="space-between"
       p={2}
       style={{ backgroundColor: theme.palette.grey[50] }}
+      width={'100%'}
     >
-      <Container sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Logo />
-        {isMobile ? (
-          <MobileDrawer navItems={navItems} onLogout={handleLogout} />
-        ) : (
-          <DesktopNav navItems={navItems} onLogout={handleLogout} />
-        )}
-      </Container>
+      <Logo />
+      {isMobile ? (
+        <MobileDrawer navItems={navItems} onLogout={handleLogout} />
+      ) : (
+        <DesktopNav navItems={navItems} onLogout={handleLogout} />
+      )}
     </Box>
   );
 }

@@ -6,25 +6,37 @@ import OrderStatus from './order-status';
 
 export default function OrderList() {
   return (
-    <Box>
-      {orders.map((order) => (
-        <CustomLink to={'/orders'}>
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: theme.palette.grey[100],
+        borderRadius: '24px',
+        padding: '24px',
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        Órdenes recientes
+      </Typography>
+      <CustomLink to={'/orders'}>
+        {orders.map((order) => (
           <Box
             key={order.id}
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              p: 1.5,
+              py: 1.5,
               mb: 1,
               backgroundColor: theme.palette.grey[50],
               borderRadius: 2,
+              alignItems: 'center',
+              gap: 2,
             }}
           >
-            <Typography variant="caption">{order.details}</Typography>
+            <Typography variant="body1">{order.details}</Typography>
             <OrderStatus status={order.status} />
           </Box>
-        </CustomLink>
-      ))}
+        ))}
+      </CustomLink>
     </Box>
   );
 }

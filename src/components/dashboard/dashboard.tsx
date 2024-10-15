@@ -22,33 +22,24 @@ export default function Dashboard() {
 
       <Grid container spacing={4}>
         <Grid item xs={12} md={8}>
-          <Typography variant="h6" gutterBottom>
-            Orden por estado
-          </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            1 Agosto - 30 Septiembre
-          </Typography>
           {loading ? (
-            <Skeleton variant="rectangular" height={300} />
+            <Skeleton variant="rectangular" height={500} />
           ) : (
             <PieChartComponent />
           )}
         </Grid>
 
         <Grid item xs={12} md={4}>
-          <Typography variant="h6" gutterBottom>
-            Órdenes recientes
-          </Typography>
           {loading ? (
             <Stack gap={1}>
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
-              <Skeleton variant="rectangular" height={50} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
+              <Skeleton variant="rectangular" height={55} />
             </Stack>
           ) : (
             <OrderList />
