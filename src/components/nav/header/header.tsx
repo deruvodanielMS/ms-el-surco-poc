@@ -29,6 +29,14 @@ export default function Header() {
       p={2}
       style={{ backgroundColor: theme.palette.grey[50] }}
       width={'100%'}
+      height={'100px'}
+      sx={{
+        position: 'fixed',
+        top: 0,
+        width: '100%',
+        zIndex: 1000,
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+      }}
     >
       <Logo />
       {isMobile ? (

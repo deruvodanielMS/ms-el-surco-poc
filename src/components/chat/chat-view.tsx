@@ -1,5 +1,6 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Box, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import { Chat } from '../../types/data';
 import ChatMessage from './chat-message';
@@ -20,21 +21,38 @@ export default function ChatView({
   onBack,
 }: ChatViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Desplazar hacia el último mensaje automáticamente
+  // Efecto para desplazar hacia el último mensaje automáticamente cuando se envía uno nuevo
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
   }, [activeChat.messages]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      onSendMessage();
+    }
+  };
 
   return (
     <>
       {onBack && (
-        <Typography
+        <Button
+          variant="text"
           onClick={onBack}
-          sx={{ marginBottom: 2, cursor: 'pointer', color: 'secondary.main' }}
+          color="secondary"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+          }}
+          startIcon={<ArrowBackIcon />}
         >
           Volver
-        </Typography>
+        </Button>
       )}
 
       <Typography variant="h6" gutterBottom>
@@ -45,6 +63,7 @@ export default function ChatView({
       </Typography>
 
       <Box
+        ref={messagesContainerRef}
         sx={{
           height: 400,
           overflowY: 'auto',
@@ -70,6 +89,7 @@ export default function ChatView({
           placeholder="Escriba aquí su mensaje..."
           value={newMessage}
           onChange={(e) => onMessageChange(e.target.value)}
+          onKeyDown={handleKeyDown}
           sx={{ marginRight: 2 }}
         />
         <IconButton
@@ -85,6 +105,7 @@ export default function ChatView({
             },
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
           }}
+          aria-label="Enviar mensaje"
         >
           <ArrowForwardIcon />
         </IconButton>

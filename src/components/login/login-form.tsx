@@ -1,4 +1,3 @@
-// src/pages/login/login-form.tsx
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
@@ -38,6 +37,13 @@ export default function LoginForm() {
     }
   };
 
+  // Soporte para el teclado (presionar "Enter")
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
+
   // Muestra el formulario con un pequeño retardo
   useEffect(() => {
     const timer = setTimeout(() => setShowForm(true), 300);
@@ -53,25 +59,10 @@ export default function LoginForm() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          width: { xs: '100%', md: '50%' },
+          width: { xs: '100%', md: '80%' },
+          margin: '0 auto',
         }}
       >
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          gap={2}
-          mb={2}
-          alignItems="center"
-        >
-          <img
-            src="/gs-icon.png"
-            alt="logo"
-            style={{ width: '88px', height: '88px' }}
-          />
-          <Typography variant="h4" gutterBottom mt={2}>
-            Grupo El Surco
-          </Typography>
-        </Stack>
-
         <Box
           sx={{
             height: 'fit-content',
@@ -84,12 +75,29 @@ export default function LoginForm() {
             boxShadow: { xs: 'none', md: '0px 0px 10px rgba(0, 0, 0, 0.1)' },
             borderRadius: { xs: 'none', md: '8px' },
             maxHeight: 'fit-content',
+            width: { xs: '80%', md: '60%' },
           }}
         >
+          <Stack
+            direction={{ xs: 'column', md: 'row' }}
+            gap={2}
+            mb={2}
+            alignItems="center"
+          >
+            <img
+              src="/gs-icon.png"
+              alt="logo"
+              style={{ width: '88px', height: '88px' }}
+            />
+            <Typography variant="h4" gutterBottom mt={2}>
+              Grupo El Surco
+            </Typography>
+          </Stack>
           <TextField
             label="Usuario"
             value={username}
             onChange={(e) => setLocalUsername(e.target.value)}
+            onKeyDown={handleKeyDown}
             margin="normal"
             fullWidth
             InputProps={{
@@ -105,6 +113,7 @@ export default function LoginForm() {
                 transform: 'scale(1.05)',
               },
             }}
+            autoFocus // El foco comienza en este campo
           />
 
           <TextField
@@ -112,6 +121,7 @@ export default function LoginForm() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
             margin="normal"
             fullWidth
             InputProps={{
@@ -140,6 +150,7 @@ export default function LoginForm() {
               width: { xs: '100%', md: 'auto' },
             }}
             endIcon={<ArrowForwardIcon />}
+            aria-label="Iniciar sesión"
           >
             Iniciar sesión
           </Button>

@@ -11,7 +11,7 @@ export default function CustomChat() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [chats, setChats] = useState<Chat[]>(initialChats);
-  const [activeChat, setActiveChat] = useState<Chat | null>(chats[0]);
+  const [activeChat, setActiveChat] = useState<Chat | null>(null); // Inicialmente, no hay chat activo
   const [newMessage, setNewMessage] = useState('');
 
   const handleSendMessage = () => {
@@ -50,17 +50,38 @@ export default function CustomChat() {
       <Grid container spacing={2}>
         {isMobile ? (
           activeChat ? (
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                border: '1px solid',
+                borderColor: theme.palette.grey[100],
+                borderRadius: '24px',
+                padding: '24px',
+                ml: 2,
+              }}
+            >
               <ChatView
                 activeChat={activeChat}
                 newMessage={newMessage}
                 onMessageChange={setNewMessage}
                 onSendMessage={handleSendMessage}
-                onBack={() => setActiveChat(null)}
+                onBack={() => setActiveChat(null)} // Volver a la lista de chats
               />
             </Grid>
           ) : (
-            <Grid item xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                border: '1px solid',
+                borderColor: theme.palette.grey[100],
+                borderRadius: '24px',
+                paddingY: '24px',
+                paddingLeft: '0 !important',
+                ml: 2,
+              }}
+            >
               <ChatList chats={chats} onChatSelect={setActiveChat} />
             </Grid>
           )

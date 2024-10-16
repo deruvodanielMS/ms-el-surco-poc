@@ -52,6 +52,11 @@ const orders: Order[] = [
   },
 ];
 
+// Ordenar las órdenes por fecha de más reciente a más antigua
+const sortedOrders = orders.sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+);
+
 // Datos para la comparativa entre dos años
 const orderDataOverTime = [
   { name: 'Semana 1', '2023': 20, '2024': 30 },
@@ -164,4 +169,4 @@ const chats: Chat[] = [
   },
 ];
 
-export { chats, orderDataOverTime, orders };
+export { chats, orderDataOverTime, sortedOrders as orders };

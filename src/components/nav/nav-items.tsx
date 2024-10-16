@@ -15,7 +15,7 @@ export default function NavItems({ navItems, onItemClick }: NavItemsProps) {
           onClick={() => onItemClick?.(item)}
           sx={{ paddingLeft: 0, marginBottom: '32px' }}
         >
-          <CustomLink to={item.path} underline boldOnHover>
+          <CustomLink to={item.path} underline>
             <Typography variant="subtitle1">{item.name}</Typography>
           </CustomLink>
         </ListItem>

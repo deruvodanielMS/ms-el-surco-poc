@@ -15,6 +15,14 @@ const COLORS = [
   theme.palette.error.main,
 ];
 
+// Referencias para cada estado
+const statusLabels = [
+  { color: theme.palette.info.main, label: 'Enviado' },
+  { color: theme.palette.primary.main, label: 'Pendiente' },
+  { color: theme.palette.warning.main, label: 'Entregado' },
+  { color: theme.palette.error.main, label: 'Cancelado' },
+];
+
 const calculateOrderStatusData = (orders: Order[]) => {
   const statusMap: Record<string, number> = orders.reduce((acc, order) => {
     const status = order.status as string;
@@ -53,18 +61,50 @@ export default function PieChartComponent() {
         1 Agosto - 30 Septiembre
       </Typography>
 
+      {/* Leyenda de colores */}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 2,
+          my: 2,
+          flexDirection: { xs: 'column', md: 'row' },
+        }}
+      >
+        {statusLabels.map((status, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Box
+              sx={{
+                width: 16,
+                height: 16,
+                backgroundColor: status.color,
+                borderRadius: '4px',
+                marginRight: '8px',
+              }}
+            />
+            <Typography variant="body2">{status.label}</Typography>
+          </Box>
+        ))}
+      </Box>
+
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie
             data={pieChartData}
             cx="50%"
             cy="50%"
-            innerRadius={50} // Aumentar grosor ajustando radios
-            outerRadius={100} // Más grande para mayor grosor
-            paddingAngle={0.2} // Reducir el espacio entre slices
+            innerRadius={50}
+            outerRadius={100}
+            paddingAngle={0.2}
             dataKey="value"
             stroke="white"
-            strokeWidth={2} // Grosor del borde blanco
+            strokeWidth={2}
             labelLine={true}
             label={({ value }) => `${value}`}
           >

@@ -24,7 +24,7 @@ export default function OrderList() {
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              py: 1.5,
+              p: 1.5,
               mb: 1,
               backgroundColor: theme.palette.grey[50],
               borderRadius: 2,

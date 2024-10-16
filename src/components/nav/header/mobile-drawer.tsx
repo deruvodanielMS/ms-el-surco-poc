@@ -13,7 +13,9 @@ import {
 import { useState } from 'react';
 import { useUser } from '../../../context/user-context';
 import theme from '../../../theme';
+import { getAvatarUrl } from '../../../utils/get-avatar';
 import NavItems from '../nav-items';
+import SettingsModal from '../settings-modal';
 
 interface MobileDrawerProps {
   navItems: { name: string; path: string }[];
@@ -25,12 +27,22 @@ export default function MobileDrawer({
   onLogout,
 }: MobileDrawerProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
   const { username } = useUser();
-  const avatarUrl = `https://thispersondoesnotexist.com/`;
+  const avatarUrl = getAvatarUrl(username);
 
   const toggleDrawer = (open: boolean) => () => setDrawerOpen(open);
 
   const handleClose = () => setDrawerOpen(false); // Cierra el drawer
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    handleClose(); // Cierra el drawer al abrir el modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -100,7 +112,9 @@ export default function MobileDrawer({
             </Box>
           </Stack>
 
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={handleOpenModal}>
+            {' '}
+            {/* Abrir el modal al hacer clic */}
             <SettingsOutlinedIcon sx={{ width: '20px', height: '20px' }} />
             <Typography variant="subtitle2" ml={2}>
               Ajustes
@@ -125,6 +139,9 @@ export default function MobileDrawer({
           </MenuItem>
         </Box>
       </Drawer>
+
+      {/* Modal personalizado */}
+      <SettingsModal open={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 }

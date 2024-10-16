@@ -1,4 +1,3 @@
-// src/theme.ts
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
@@ -122,11 +121,41 @@ const theme = createTheme({
       fontFamily: 'Barlow, sans-serif',
     },
     button: {
-      textTransform: 'none', // Elimina el uppercase globalmente
+      textTransform: 'none',
       fontFamily: 'Rethink Sans, sans-serif',
     },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: (theme) => ({
+        '*': {
+          '::-webkit-scrollbar': {
+            width: '12px',
+            height: '8px',
+          },
+          '::-webkit-scrollbar-thumb': {
+            backgroundColor: theme.palette.secondary.dark,
+            borderRadius: '10px',
+            border: `2px solid ${theme.palette.background.default}`,
+            transition: 'background-color 0.3s ease',
+          },
+          '::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: theme.palette.secondary.main,
+          },
+          '::-webkit-scrollbar-track': {
+            backgroundColor: theme.palette.background.default,
+          },
+          // Estilos para Firefox
+          '*': {
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${theme.palette.secondary.dark} ${theme.palette.background.default}`,
+          },
+          '*:hover': {
+            scrollbarColor: `${theme.palette.secondary.main} ${theme.palette.background.default}`,
+          },
+        },
+      }),
+    },
     MuiButton: {
       styleOverrides: {
         root: {

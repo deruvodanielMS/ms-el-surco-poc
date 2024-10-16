@@ -21,7 +21,7 @@ export default function Dashboard() {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={7}>
           {loading ? (
             <Skeleton variant="rectangular" height={500} />
           ) : (
@@ -29,7 +29,7 @@ export default function Dashboard() {
           )}
         </Grid>
 
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={5}>
           {loading ? (
             <Stack gap={1}>
               <Skeleton variant="rectangular" height={55} />

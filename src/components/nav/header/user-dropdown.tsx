@@ -1,11 +1,22 @@
-// src/components/user/UserDropdown.tsx
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import { Avatar, Box, Button, Menu, MenuItem, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ClickAwayListener,
+  MenuItem,
+  Paper,
+  Popper,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import { useUser } from '../../../context/user-context';
 import theme from '../../../theme';
+import { getAvatarUrl } from '../../../utils/get-avatar';
+import SettingsModal from '../settings-modal';
 
 interface UserDropdownProps {
   onLogout: () => void;
@@ -14,19 +25,28 @@ interface UserDropdownProps {
 export default function UserDropdown({ onLogout }: UserDropdownProps) {
   const { username } = useUser(); // Accede al nombre y rol del usuario desde el contexto
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const isMenuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(anchorEl ? null : event.currentTarget); // Toggle
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  // Genera un URL aleatorio para la imagen del avatar basado en el nombre del usuario
-  const avatarUrl = `https://thispersondoesnotexist.com/`;
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    handleMenuClose(); // Cerrar el menú al abrir el modal
+  };
 
-  const isMenuOpen = Boolean(anchorEl); // Verifica si el menú está abierto
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Obtiene el avatar específico del usuario
+  const avatarUrl = getAvatarUrl(username);
 
   return (
     <>
@@ -52,45 +72,77 @@ export default function UserDropdown({ onLogout }: UserDropdownProps) {
         />
       </Button>
 
-      <Menu
-        anchorEl={anchorEl}
+      <Popper
         open={isMenuOpen}
-        onClose={handleMenuClose}
-        PaperProps={{
-          elevation: 1, // Sombra del menú
-          sx: {
-            borderRadius: 4, // Bordes redondeados
-            paddingX: 0,
-            paddingY: 2,
-            minWidth: 200,
-            mt: 1,
+        anchorEl={anchorEl}
+        placement="bottom-end"
+        disablePortal
+        modifiers={[
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 10], // Ajusta el desplazamiento vertical
+            },
           },
-        }}
+        ]}
       >
-        <MenuItem
-          onClick={handleMenuClose}
-          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-        >
-          <SettingsOutlinedIcon sx={{ width: 20, height: 20 }} />
-          <Typography variant="subtitle2">Ajustes</Typography>
-        </MenuItem>
-        <MenuItem
-          onClick={onLogout}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            color: theme.palette.error.main,
-          }}
-        >
-          <LogoutIcon
-            sx={{ color: theme.palette.error.main, width: 20, height: 20 }}
-          />
-          <Typography variant="subtitle2" color={theme.palette.error.main}>
-            Cerrar sesión
-          </Typography>
-        </MenuItem>
-      </Menu>
+        <ClickAwayListener onClickAway={handleMenuClose}>
+          <Paper
+            elevation={1}
+            sx={{
+              borderRadius: 4,
+              paddingX: 0,
+              paddingY: 2,
+              minWidth: 200,
+              mt: 1,
+            }}
+          >
+            <Stack>
+              <MenuItem
+                onClick={handleOpenModal} // Abre el modal al hacer clic
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 1,
+                }}
+              >
+                <SettingsOutlinedIcon sx={{ width: 20, height: 20 }} />
+                <Typography variant="subtitle2">Ajustes</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={onLogout}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  px: 2,
+                  py: 1,
+                  color: theme.palette.error.main,
+                }}
+              >
+                <LogoutIcon
+                  sx={{
+                    color: theme.palette.error.main,
+                    width: 20,
+                    height: 20,
+                  }}
+                />
+                <Typography
+                  variant="subtitle2"
+                  color={theme.palette.error.main}
+                >
+                  Cerrar sesión
+                </Typography>
+              </MenuItem>
+            </Stack>
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
+
+      {/* Modal personalizado */}
+      <SettingsModal open={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 }

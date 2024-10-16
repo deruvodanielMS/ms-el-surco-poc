@@ -4,14 +4,13 @@ import { Link as RouterLink } from 'react-router-dom';
 interface CustomLinkProps extends Omit<LinkProps, 'underline'> {
   to: string;
   underline?: boolean;
-  boldOnHover?: boolean;
 }
 
 export default function CustomLink({
   to,
   children,
   underline = false,
-  boldOnHover = false,
+
   ...rest
 }: CustomLinkProps) {
   return (
@@ -25,7 +24,6 @@ export default function CustomLink({
         textDecoration: 'none',
         '&:hover': {
           textDecoration: underline ? 'underline' : 'none',
-          fontWeight: boldOnHover ? 700 : 400,
         },
       }}
       {...rest}

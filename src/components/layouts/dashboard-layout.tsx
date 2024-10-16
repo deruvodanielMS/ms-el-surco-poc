@@ -1,4 +1,5 @@
 import { Box, Container } from '@mui/material';
+import ScrollToTop from '../../utils/scroll-to-top';
 import Footer from '../nav/footer/footer';
 import Header from '../nav/header/header';
 
@@ -9,6 +10,7 @@ interface LayoutProps {
 export default function DashboardLayout({ children }: LayoutProps) {
   return (
     <>
+      <ScrollToTop />
       <Header />
       <Container>
         <Box
@@ -18,6 +20,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
           justifyContent="start"
           minHeight="100vh"
           pb={4}
+          pt={'100px'}
         >
           {children}
         </Box>
