@@ -2,6 +2,7 @@
 import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../layouts/dashboard-layout';
+import FilesComponent from './dropbox-files';
 
 declare global {
   interface Window {
@@ -41,10 +42,15 @@ export default function Files() {
         embedRef.current.innerHTML = '';
 
         const options = {
-          link: 'https://www.dropbox.com/scl/fo/hdbby8obdwrvolxdxhsw2/ADVJbu8Bm4VNLPvO28bdCtI?rlkey=rlp7vz5ajl1dya1ty5a5c3l0g&st=m8xnck3h&dl=0',
+          link: 'https://www.dropbox.com/scl/fo/i4r9s2i4pnujdz900fvca/AEzzozrLBMpkIsDBTg1NTh4?rlkey=y2p5wch5l508wv7bpy8cfygt0&st=4brpy1v1&dl=0',
+          file: {
+            // Sets the zoom mode for embedded files. Defaults to 'best'.
+            zoom: 'fit', // or "fit"
+          },
+
           folder: {
             view: 'list',
-            headerSize: 'normal',
+            headerSize: 'small',
           },
         };
 
@@ -138,6 +144,7 @@ export default function Files() {
           {/* Embedder de Dropbox */}
           <div ref={embedRef} style={{ width: '100%', height: '100%' }}></div>
         </Box>
+        <FilesComponent />
       </Container>
     </DashboardLayout>
   );

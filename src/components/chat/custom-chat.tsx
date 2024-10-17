@@ -1,6 +1,6 @@
 import { Grid, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
-import { chats as initialChats } from '../../mock-data/mock-data';
+import { chats as initialChats } from '../../mock-data/mock-chats';
 import { Chat } from '../../types/data';
 import DashboardLayout from '../layouts/dashboard-layout';
 import ChatList from './chat-list';
