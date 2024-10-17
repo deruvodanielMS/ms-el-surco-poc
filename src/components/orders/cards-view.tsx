@@ -7,14 +7,20 @@ import {
   Card,
   CardContent,
   IconButton,
+  Stack,
   Typography,
 } from '@mui/material';
 import { Dropbox } from 'dropbox';
 import { useFilePreview } from '../../hooks/use-file-preview';
+import theme from '../../theme';
 import OrderStatus from '../dashboard/order-status';
-import FileModal from '../files/file-modal-preview';
+import FilePreviewDrawer from '../ui/file-preview-drawer';
 
-export default function CardView({ orders }: any) {
+interface CardViewProps {
+  orders: any[];
+}
+
+export default function CardView({ orders }: CardViewProps) {
   const dbx = new Dropbox({
     accessToken: import.meta.env.VITE_DROPBOX_ACCESS_TOKEN,
   });
@@ -24,9 +30,12 @@ export default function CardView({ orders }: any) {
     isModalOpen,
     error,
     handleFileClick,
-    handleDownload,
     handleClosePreview,
   } = useFilePreview(dbx);
+
+  const handleDownload = (file: any) => {
+    window.open(file.link, '_blank');
+  };
 
   return (
     <Box display="flex" flexDirection="column" gap={2} minWidth={'100%'}>
@@ -35,9 +44,25 @@ export default function CardView({ orders }: any) {
       {orders.map((order) => (
         <Card key={order.id} sx={{ width: '100%' }}>
           <CardContent sx={{ width: '100%' }}>
-            <Typography variant="h6">Orden #</Typography>
+            <Stack
+              direction={'row'}
+              width={'100%'}
+              justifyContent={'space-between'}
+              alignItems={'center'}
+            >
+              <Typography variant="h6">Orden #</Typography>
+              <OrderStatus status={order.status} />
+            </Stack>
             <Typography variant="body1">{order.name}</Typography>
-            <OrderStatus status={order.status} />
+            <Typography
+              variant="caption"
+              mt={2}
+              fontWeight={700}
+              textTransform={'uppercase'}
+              color={theme.palette.grey[300]}
+            >
+              &#x2022; {order.businessUnit}
+            </Typography>
             <Typography variant="body2" mt={2}>
               {order.details}
             </Typography>
@@ -46,14 +71,18 @@ export default function CardView({ orders }: any) {
             </Typography>
             <Box mt={2}>
               <IconButton
-                onClick={() => handleFileClick(order)} // Asegúrate de que order tiene tempLink
-                disabled={!order.tempLink} // Deshabilitar si no tiene tempLink
+                onClick={() => {
+                  console.log('Archivo para previsualización:', order);
+                  handleFileClick(order); // Esta función selecciona el archivo
+                }}
               >
                 <VisibilityIcon />
               </IconButton>
               <IconButton
-                onClick={() => handleDownload(order)} // Asegúrate de que order tiene tempLink
-                disabled={!order.tempLink} // Deshabilitar si no tiene tempLink
+                onClick={() => {
+                  handleDownload(order); // Función para descargar
+                }}
+                disabled={!order.link}
               >
                 <DownloadIcon />
               </IconButton>
@@ -62,10 +91,10 @@ export default function CardView({ orders }: any) {
         </Card>
       ))}
 
-      <FileModal
+      <FilePreviewDrawer
         open={isModalOpen}
         onClose={handleClosePreview}
-        file={selectedFile}
+        file={selectedFile} // Pasamos el archivo seleccionado
       />
     </Box>
   );

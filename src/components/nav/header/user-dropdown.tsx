@@ -56,10 +56,18 @@ export default function UserDropdown({ onLogout }: UserDropdownProps) {
       >
         <Avatar src={avatarUrl} alt={username} sx={{ width: 50, height: 50 }} />
         <Box mx={2} textAlign="left">
-          <Typography variant="subtitle1" color={theme.palette.grey[800]}>
+          <Typography
+            variant="subtitle1"
+            color={theme.palette.grey[800]}
+            lineHeight={'normal'}
+          >
             {username}
           </Typography>
-          <Typography variant="subtitle2" color={theme.palette.grey[400]}>
+          <Typography
+            variant="subtitle2"
+            color={theme.palette.grey[400]}
+            lineHeight={'normal'}
+          >
             Administrador
           </Typography>
         </Box>

@@ -1,4 +1,3 @@
-// En algún componente donde necesites usar la función
 import { Chip } from '@mui/material';
 import { getColorByStatus } from '../../utils/color-utils';
 
@@ -7,14 +6,14 @@ interface OrderStatusProps {
 }
 
 const OrderStatus: React.FC<OrderStatusProps> = ({ status }) => {
-  const color = getColorByStatus(status);
+  const { backgroundColor, textColor } = getColorByStatus(status);
 
   return (
     <Chip
       label={status}
       sx={{
-        backgroundColor: color,
-        color: '#000',
+        backgroundColor: backgroundColor,
+        color: textColor,
         height: '20px',
       }}
     />

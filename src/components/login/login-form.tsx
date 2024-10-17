@@ -59,7 +59,7 @@ export default function LoginForm() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          width: { xs: '100%', md: '80%' },
+          width: '100%',
           margin: '0 auto',
         }}
       >
@@ -75,7 +75,7 @@ export default function LoginForm() {
             boxShadow: { xs: 'none', md: '0px 0px 10px rgba(0, 0, 0, 0.1)' },
             borderRadius: { xs: 'none', md: '8px' },
             maxHeight: 'fit-content',
-            width: { xs: '80%', md: '60%' },
+            width: { xs: '80%', l: '70%' },
           }}
         >
           <Stack

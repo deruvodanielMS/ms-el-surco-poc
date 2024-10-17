@@ -63,8 +63,10 @@ export default function LoginSlider() {
                 src={slide.src}
                 alt={`Imagen ${index + 1}`}
                 style={{
+                  maxWidth: '80%',
                   width: 'auto',
-                  height: '550px',
+                  height: 'auto',
+                  maxHeight: '600px',
                   objectFit: 'cover',
                   margin: '40px auto',
                 }}

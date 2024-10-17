@@ -2,7 +2,6 @@
 import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import DashboardLayout from '../layouts/dashboard-layout';
-import FilesComponent from './dropbox-files';
 
 declare global {
   interface Window {
@@ -144,7 +143,6 @@ export default function Files() {
           {/* Embedder de Dropbox */}
           <div ref={embedRef} style={{ width: '100%', height: '100%' }}></div>
         </Box>
-        <FilesComponent />
       </Container>
     </DashboardLayout>
   );

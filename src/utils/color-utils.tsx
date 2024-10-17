@@ -1,16 +1,36 @@
 import theme from '../theme';
 
-export const getColorByStatus = (status: string): string => {
+interface StatusColor {
+  backgroundColor: string;
+  textColor: string;
+}
+
+export const getColorByStatus = (status: string): StatusColor => {
   switch (status) {
     case 'Pendiente':
-      return theme.palette.warning.main;
+      return {
+        backgroundColor: theme.palette.warning.main,
+        textColor: theme.palette.warning.contrastText,
+      };
     case 'Enviado':
-      return theme.palette.info.main;
+      return {
+        backgroundColor: theme.palette.info.main,
+        textColor: theme.palette.info.contrastText,
+      };
     case 'Entregado':
-      return theme.palette.primary.main;
+      return {
+        backgroundColor: theme.palette.primary.main,
+        textColor: theme.palette.primary.contrastText,
+      };
     case 'Cancelado':
-      return theme.palette.error.main;
+      return {
+        backgroundColor: theme.palette.error.main,
+        textColor: theme.palette.error.contrastText,
+      };
     default:
-      return theme.palette.grey[500];
+      return {
+        backgroundColor: theme.palette.grey[500],
+        textColor: theme.palette.getContrastText(theme.palette.grey[500]),
+      };
   }
 };

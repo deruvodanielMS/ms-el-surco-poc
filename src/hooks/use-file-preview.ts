@@ -24,14 +24,6 @@ export const useFilePreview = (dbx: Dropbox) => {
     }
   };
 
-  const handleDownload = (file: any) => {
-    if (file.tempLink) {
-      window.open(file.tempLink, '_blank'); // Utiliza el tempLink para descargar
-    } else {
-      setError('No se puede descargar este archivo.');
-    }
-  };
-
   const handleClosePreview = () => {
     setIsModalOpen(false);
     setSelectedFile(null);
@@ -41,7 +33,6 @@ export const useFilePreview = (dbx: Dropbox) => {
     selectedFile,
     isModalOpen,
     error,
-    handleDownload,
     handleFileClick,
     handleClosePreview,
   };

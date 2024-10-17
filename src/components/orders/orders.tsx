@@ -11,6 +11,7 @@ import { useTheme } from '@mui/material/styles';
 import { SetStateAction, useEffect, useState } from 'react';
 import { listFolderFiles } from '../../services/dropbox-service'; // Servicio para listar archivos de Dropbox
 import DashboardLayout from '../layouts/dashboard-layout';
+import CardView from './cards-view';
 import TableView from './table-view';
 
 export default function Orders() {
@@ -40,30 +41,43 @@ export default function Orders() {
     const fetchFiles = async () => {
       try {
         // Llama al servicio para listar todas las carpetas dentro de la carpeta "Órdenes"
-        const ordersFolders = await listFolderFiles(
+        const businessUnits = await listFolderFiles(
           '/Carpeta del Usuario/Órdenes',
+          true, // Recursiva para que busque en subcarpetas también
         );
 
         // Inicializa un array para almacenar las órdenes formateadas
         let allOrders: SetStateAction<any[]> = [];
 
-        for (const folder of ordersFolders) {
-          if (folder['.tag'] === 'folder') {
-            // Llama al servicio para listar los archivos dentro de cada subcarpeta
-            const filesInFolder = await listFolderFiles(folder.path_lower);
+        for (const businessUnit of businessUnits) {
+          if (businessUnit['.tag'] === 'folder') {
+            const businessUnitName = businessUnit.name; // Nombre de la unidad de negocio
 
-            const formattedOrders = filesInFolder.map((file) => ({
-              id: file.id, // Usa el id único del archivo de Dropbox
-              name: file.name, // Usa el nombre original del archivo
-              status: mapFolderToStatus(folder.name), // Asigna el estado dinámicamente
-              details: `Detalles de la orden ${file.name}`, // Placeholder para detalles
-              date: new Date().toISOString().slice(0, 10), // Placeholder para la fecha
-              path_lower: file.path_lower, // Mantén el path_lower para usarlo con Dropbox
-              link: file.link,
-            }));
+            // Recorre las subcarpetas (los estados de las órdenes)
+            const stateFolders = await listFolderFiles(businessUnit.path_lower);
 
-            // Agrega las órdenes formateadas al array principal
-            allOrders = [...allOrders, ...formattedOrders];
+            for (const folder of stateFolders) {
+              if (folder['.tag'] === 'folder') {
+                const status = mapFolderToStatus(folder.name); // El estado se mapea desde el nombre de la carpeta
+
+                // Listar los archivos dentro de cada subcarpeta (las órdenes)
+                const filesInFolder = await listFolderFiles(folder.path_lower);
+
+                const formattedOrders = filesInFolder.map((file) => ({
+                  id: file.id, // Usa el id único del archivo de Dropbox
+                  name: file.name, // Usa el nombre original del archivo
+                  status: status, // Asigna el estado dinámicamente
+                  businessUnit: businessUnitName, // Asigna la unidad de negocio
+                  details: `Detalles de la orden ${file.name}`, // Placeholder para detalles
+                  date: new Date().toISOString().slice(0, 10), // Placeholder para la fecha
+                  path_lower: file.path_lower, // Mantén el path_lower para usarlo con Dropbox
+                  link: file.link, // El link temporal para previsualización o descarga
+                }));
+
+                // Agrega las órdenes formateadas al array principal
+                allOrders = [...allOrders, ...formattedOrders];
+              }
+            }
           }
         }
 
@@ -85,12 +99,14 @@ export default function Orders() {
           sx={{
             display: 'flex',
             justifyContent: 'center',
+            flexDirection: 'column',
             alignItems: 'center',
             height: '80vh',
             width: '100%',
           }}
         >
           <CircularProgress />
+          <Typography>Espere mientras se cargan los datos...</Typography>
         </Box>
       </DashboardLayout>
     );
@@ -104,12 +120,11 @@ export default function Orders() {
         Órdenes
       </Typography>
       <Box minWidth={'100%'}>
-        <TableView orders={orders} />
-        {/* {isMobile ? (
+        {isMobile ? (
           <CardView orders={orders} />
         ) : (
           <TableView orders={orders} />
-        )} */}
+        )}
       </Box>
     </DashboardLayout>
   );
