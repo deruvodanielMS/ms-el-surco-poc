@@ -10,42 +10,56 @@ export const listFolderFiles = async (
   });
 
   try {
-    const response = await dbx.filesListFolder({ path });
-    let allFiles = [...response.result.entries];
+    let hasMore = true;
+    let cursor = '';
+    let allFiles: any[] = [];
 
-    if (recursive) {
-      const subfolders = allFiles.filter((entry) => entry['.tag'] === 'folder');
-      for (const folder of subfolders) {
-        const subfolderFiles = await listFolderFiles(
-          folder.path_lower || '',
-          true,
-        );
-        allFiles = [...allFiles, ...subfolderFiles];
-      }
+    // Hacer la primera llamada a la API de Dropbox para listar la carpeta
+    const response = await dbx.filesListFolder({ path });
+    allFiles = [...response.result.entries];
+    cursor = response.result.cursor;
+    hasMore = response.result.has_more;
+
+    // Manejar la paginación si hay más archivos
+    while (hasMore) {
+      const continueResponse = await dbx.filesListFolderContinue({ cursor });
+      allFiles = [...allFiles, ...continueResponse.result.entries];
+      cursor = continueResponse.result.cursor;
+      hasMore = continueResponse.result.has_more;
     }
 
-    // Generar los tempLinks para todos los archivos, pero verificando que el `path_lower` no sea undefined
-    const filesWithLinks = await Promise.all(
-      allFiles.map(async (file) => {
-        if (file['.tag'] === 'file' && file.path_lower) {
-          // Asegúrate de que file.path_lower no sea undefined
-          try {
-            const tempLinkResponse = await dbx.filesGetTemporaryLink({
-              path: file.path_lower,
-            });
-            return { ...file, link: tempLinkResponse.result.link }; // Cambiamos a 'link' en lugar de 'tempLink'
-          } catch (error) {
-            console.error('Error al obtener el enlace temporal:', error);
-            return { ...file, link: null }; // Si hay error, devolver sin enlace
-          }
-        }
-        return file; // Si es una carpeta, no necesitamos link
-      }),
-    );
+    // Procesar subcarpetas de forma recursiva (en paralelo) si es necesario
+    if (recursive) {
+      const subfolders = allFiles.filter((entry) => entry['.tag'] === 'folder');
+      const subfolderPromises = subfolders.map((folder) =>
+        listFolderFiles(folder.path_lower || '', true),
+      );
+      const subfolderFiles = await Promise.all(subfolderPromises);
+      subfolderFiles.forEach((files) => {
+        allFiles = [...allFiles, ...files];
+      });
+    }
 
-    return filesWithLinks;
+    return allFiles; // No solicitamos el temporary_link aún
   } catch (error) {
     console.error('Error al listar archivos de Dropbox:', error);
     throw error;
+  }
+};
+
+// Nueva función para obtener el enlace temporal cuando sea necesario
+export const getTemporaryLink = async (
+  path: string,
+): Promise<string | null> => {
+  const dbx = new Dropbox({
+    accessToken: import.meta.env.VITE_DROPBOX_ACCESS_TOKEN,
+  });
+
+  try {
+    const response = await dbx.filesGetTemporaryLink({ path });
+    return response.result.link;
+  } catch (error) {
+    console.error('Error al obtener el enlace temporal:', error);
+    return null;
   }
 };

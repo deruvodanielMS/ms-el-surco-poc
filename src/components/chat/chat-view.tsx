@@ -1,24 +1,21 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import { useEffect, useRef } from 'react';
 import { Chat } from '../../types/data';
 import ChatMessage from './chat-message';
 
 interface ChatViewProps {
-  activeChat: Chat;
+  chat: Chat; // Recibe el chat como prop
   newMessage: string;
   onMessageChange: (value: string) => void;
   onSendMessage: () => void;
-  onBack?: () => void;
 }
 
 export default function ChatView({
-  activeChat,
+  chat,
   newMessage,
   onMessageChange,
   onSendMessage,
-  onBack,
 }: ChatViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -29,7 +26,7 @@ export default function ChatView({
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [activeChat.messages]);
+  }, [chat.messages]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
@@ -39,27 +36,11 @@ export default function ChatView({
 
   return (
     <>
-      {onBack && (
-        <Button
-          variant="text"
-          onClick={onBack}
-          color="secondary"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-          }}
-          startIcon={<ArrowBackIcon />}
-        >
-          Volver
-        </Button>
-      )}
-
       <Typography variant="h6" gutterBottom>
-        {activeChat.user}
+        {chat.user}
       </Typography>
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-        {activeChat.orderDetails}
+        {chat.orderDetails}
       </Typography>
 
       <Box
@@ -69,9 +50,11 @@ export default function ChatView({
           overflowY: 'auto',
           padding: 2,
           marginBottom: 2,
+          backgroundColor: '#f4f4f4', // Color del fondo para simular la interfaz de chat
+          borderRadius: '8px',
         }}
       >
-        {activeChat.messages.map((message, index) => (
+        {chat.messages.map((message, index) => (
           <ChatMessage
             key={index}
             text={message.text}

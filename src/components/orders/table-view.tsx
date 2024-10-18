@@ -17,6 +17,7 @@ import {
 import { Dropbox } from 'dropbox';
 import { useState } from 'react';
 import { useFilePreview } from '../../hooks/use-file-preview';
+import { getTemporaryLink } from '../../services/dropbox-service'; // Nuevo import
 import theme from '../../theme';
 import OrderStatus from '../dashboard/order-status';
 import FileModal from '../ui/file-preview-modal';
@@ -25,7 +26,6 @@ interface TableViewProps {
   orders: any[];
 }
 
-// Definir las posibles llaves para el ordenamiento
 type OrderKey = 'name' | 'businessUnit' | 'status' | 'date';
 
 // Definir un mapa de prioridad para los estados
@@ -51,6 +51,32 @@ export default function TableView({ orders }: TableViewProps) {
   // Estados para manejar el sort
   const [orderBy, setOrderBy] = useState<OrderKey>('name'); // Columna por la cual ordenar
   const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc'); // Dirección del ordenamiento
+
+  // Estado para almacenar los enlaces temporales obtenidos
+  const [fileLinks, setFileLinks] = useState<{ [path: string]: string | null }>(
+    {},
+  );
+
+  // Función para obtener el link del archivo bajo demanda
+  const handleDownload = async (file: any) => {
+    const filePath = file.path_lower;
+
+    // Si ya tenemos el link en caché, lo usamos
+    const cachedLink = fileLinks[filePath];
+    if (cachedLink) {
+      window.open(cachedLink, '_blank');
+      return;
+    }
+
+    // Si no, lo obtenemos y lo almacenamos en caché
+    const link = await getTemporaryLink(filePath);
+    if (link) {
+      setFileLinks((prevLinks) => ({ ...prevLinks, [filePath]: link }));
+      window.open(link, '_blank'); // Solo abrimos si el link no es null
+    } else {
+      console.error('No se pudo obtener el enlace temporal');
+    }
+  };
 
   // Función para manejar el click de las cabeceras de las columnas
   const handleSortRequest = (property: OrderKey) => {
@@ -78,10 +104,6 @@ export default function TableView({ orders }: TableViewProps) {
     }
     return 0;
   });
-
-  const handleDownload = (file: any) => {
-    window.open(file.link, '_blank');
-  };
 
   return (
     <>
@@ -170,19 +192,10 @@ export default function TableView({ orders }: TableViewProps) {
                 <TableCell>{order.details}</TableCell>
                 <TableCell>{order.date}</TableCell>
                 <TableCell>
-                  <IconButton
-                    onClick={() => {
-                      handleFileClick(order);
-                    }}
-                  >
+                  <IconButton onClick={() => handleFileClick(order)}>
                     <VisibilityIcon />
                   </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      handleDownload(order);
-                    }}
-                    disabled={!order.link}
-                  >
+                  <IconButton onClick={() => handleDownload(order)}>
                     <DownloadIcon />
                   </IconButton>
                 </TableCell>

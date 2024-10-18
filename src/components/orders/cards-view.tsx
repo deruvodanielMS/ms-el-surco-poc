@@ -11,7 +11,9 @@ import {
   Typography,
 } from '@mui/material';
 import { Dropbox } from 'dropbox';
+import { useState } from 'react';
 import { useFilePreview } from '../../hooks/use-file-preview';
+import { getTemporaryLink } from '../../services/dropbox-service'; // Importar la función para obtener el temporary link
 import theme from '../../theme';
 import OrderStatus from '../dashboard/order-status';
 import FilePreviewDrawer from '../ui/file-preview-drawer';
@@ -24,7 +26,6 @@ export default function CardView({ orders }: CardViewProps) {
   const dbx = new Dropbox({
     accessToken: import.meta.env.VITE_DROPBOX_ACCESS_TOKEN,
   });
-
   const {
     selectedFile,
     isModalOpen,
@@ -33,8 +34,30 @@ export default function CardView({ orders }: CardViewProps) {
     handleClosePreview,
   } = useFilePreview(dbx);
 
-  const handleDownload = (file: any) => {
-    window.open(file.link, '_blank');
+  // Estado para almacenar los enlaces temporales obtenidos
+  const [fileLinks, setFileLinks] = useState<{ [path: string]: string | null }>(
+    {},
+  );
+
+  // Función para manejar la descarga y obtener el enlace solo cuando sea necesario
+  const handleDownload = async (file: any) => {
+    const filePath = file.path_lower;
+
+    // Si ya tenemos el enlace en caché, lo usamos
+    const cachedLink = fileLinks[filePath];
+    if (cachedLink) {
+      window.open(cachedLink, '_blank');
+      return;
+    }
+
+    // Si no, obtenemos el enlace temporal y lo almacenamos en caché
+    const link = await getTemporaryLink(filePath);
+    if (link) {
+      setFileLinks((prevLinks) => ({ ...prevLinks, [filePath]: link }));
+      window.open(link, '_blank');
+    } else {
+      console.error('No se pudo obtener el enlace temporal');
+    }
   };
 
   return (
@@ -50,7 +73,7 @@ export default function CardView({ orders }: CardViewProps) {
               justifyContent={'space-between'}
               alignItems={'center'}
             >
-              <Typography variant="h6">Orden #</Typography>
+              <Typography variant="h6">Orden #{order.name}</Typography>
               <OrderStatus status={order.status} />
             </Stack>
             <Typography variant="body1">{order.name}</Typography>
@@ -72,17 +95,16 @@ export default function CardView({ orders }: CardViewProps) {
             <Box mt={2}>
               <IconButton
                 onClick={() => {
-                  console.log('Archivo para previsualización:', order);
-                  handleFileClick(order); // Esta función selecciona el archivo
+                  handleFileClick(order); // Esta función selecciona el archivo para previsualización
                 }}
               >
                 <VisibilityIcon />
               </IconButton>
               <IconButton
                 onClick={() => {
-                  handleDownload(order); // Función para descargar
+                  handleDownload(order); // Función para descargar el archivo cuando se haga clic
                 }}
-                disabled={!order.link}
+                disabled={!order.path_lower} // Solo habilitamos el botón si existe `path_lower`
               >
                 <DownloadIcon />
               </IconButton>
@@ -91,6 +113,7 @@ export default function CardView({ orders }: CardViewProps) {
         </Card>
       ))}
 
+      {/* Drawer para previsualización del archivo */}
       <FilePreviewDrawer
         open={isModalOpen}
         onClose={handleClosePreview}

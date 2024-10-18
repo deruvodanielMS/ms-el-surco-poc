@@ -18,7 +18,7 @@ export default function ChatMessage({
       sx={{
         marginBottom: 2,
         display: 'flex',
-        flexDirection: isSystem ? 'row-reverse' : 'row',
+        flexDirection: !isSystem ? 'row-reverse' : 'row',
       }}
     >
       <Paper
@@ -28,7 +28,7 @@ export default function ChatMessage({
             ? theme.palette.secondary.light
             : theme.palette.grey[50],
           maxWidth: '70%',
-          borderRadius: isSystem ? '24px 24px 0 24px' : '24px 24px 24px 0',
+          borderRadius: !isSystem ? '24px 24px 0 24px' : '24px 24px 24px 0',
         }}
       >
         <Typography variant="body1">{text}</Typography>

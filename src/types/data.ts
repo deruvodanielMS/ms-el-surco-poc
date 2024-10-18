@@ -1,8 +1,13 @@
+// src/types/data.ts
 export interface Order {
-  id: number;
+  id: string;
+  name: string;
   status: string;
+  businessUnit: string;
   details: string;
   date: string;
+  path_lower: string;
+  link: string;
 }
 
 export interface Message {

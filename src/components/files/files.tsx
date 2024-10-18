@@ -102,19 +102,16 @@ export default function Files() {
           {isLoading && (
             <Box
               sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'center',
-                zIndex: 1, // Asegura que el loader esté por encima del embedder
-                backgroundColor: 'rgba(255, 255, 255, 0.8)', // Fondo semitransparente
+                flexDirection: 'column',
+                alignItems: 'center',
+                height: '80vh',
+                width: '100%',
               }}
             >
               <CircularProgress />
+              <Typography>Espere mientras se cargan los datos...</Typography>
             </Box>
           )}
 
