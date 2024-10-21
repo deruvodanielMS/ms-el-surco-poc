@@ -26,6 +26,8 @@ interface OrdersContextType {
   orders: Order[];
   loading: boolean;
   error: string | null;
+  generateOrderId: (index: number) => string; // Nueva función para generar IDs únicos
+  removeFileExtension: (filename: string) => string; // Nueva función para eliminar extensiones
 }
 
 const OrdersContext = createContext<OrdersContextType | undefined>(undefined);
@@ -36,9 +38,16 @@ interface OrdersProviderProps {
 }
 
 export const OrdersProvider = ({ children }: OrdersProviderProps) => {
-  const [orders, setOrders] = useState<Order[]>([]); // Ahora especificamos que es un arreglo de 'Order'
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Función para generar un ID único
+  const generateOrderId = (index: number): string => `ORD-${index + 1}`;
+
+  // Función para eliminar la extensión de un archivo
+  const removeFileExtension = (filename: string): string =>
+    filename.replace(/\.[^/.]+$/, '');
 
   // Definición de la función que mapea el estado de las órdenes
   const mapFolderToStatus = (folderName: string): string => {
@@ -64,7 +73,7 @@ export const OrdersProvider = ({ children }: OrdersProviderProps) => {
           true,
         );
 
-        let allOrders: Order[] = []; // Tipo explícito de 'Order[]'
+        let allOrders: Order[] = [];
 
         for (const businessUnit of businessUnits) {
           if (businessUnit['.tag'] === 'folder') {
@@ -81,7 +90,7 @@ export const OrdersProvider = ({ children }: OrdersProviderProps) => {
                   name: file.name,
                   status: status,
                   businessUnit: businessUnitName,
-                  details: `Detalles de la orden ${file.name}`,
+                  details: `${file.name}`,
                   date: new Date().toISOString().slice(0, 10),
                   path_lower: file.path_lower,
                   link: file.link,
@@ -105,7 +114,9 @@ export const OrdersProvider = ({ children }: OrdersProviderProps) => {
   }, []);
 
   return (
-    <OrdersContext.Provider value={{ orders, loading, error }}>
+    <OrdersContext.Provider
+      value={{ orders, loading, error, generateOrderId, removeFileExtension }}
+    >
       {children}
     </OrdersContext.Provider>
   );

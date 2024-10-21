@@ -1,16 +1,19 @@
 import { Box, SwipeableDrawer, Typography } from '@mui/material';
+import { EmbedPDF } from '@simplepdf/react-embed-pdf';
 import React from 'react';
 
 interface FilePreviewDrawerProps {
   open: boolean;
   onClose: () => void;
   file: string | null;
+  fileType: string | null;
 }
 
 const FilePreviewDrawer: React.FC<FilePreviewDrawerProps> = ({
   open,
   onClose,
   file,
+  fileType,
 }) => {
   return (
     <SwipeableDrawer
@@ -20,7 +23,7 @@ const FilePreviewDrawer: React.FC<FilePreviewDrawerProps> = ({
       onOpen={() => {}}
       PaperProps={{
         sx: {
-          height: '70vh',
+          height: '80vh',
           borderRadius: '16px 16px 0 0',
           transition: 'transform 0.3s ease-in-out',
         },
@@ -30,19 +33,18 @@ const FilePreviewDrawer: React.FC<FilePreviewDrawerProps> = ({
         sx={{
           p: 3,
           textAlign: 'center',
+          height: '95%',
         }}
       >
         <Typography id="drawer-title" variant="h6" component="h2">
           Previsualización del archivo
         </Typography>
         {file ? (
-          file.endsWith('.pdf') ? (
-            <embed
-              src={file}
-              width="100%"
-              height="100%"
-              type="application/pdf"
-              style={{ maxHeight: '60vh' }}
+          fileType === '.pdf' ? (
+            <EmbedPDF
+              mode="inline"
+              style={{ width: 'auto', height: '100%' }}
+              documentURL={file}
             />
           ) : (
             <img

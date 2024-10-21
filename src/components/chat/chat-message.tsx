@@ -26,7 +26,7 @@ export default function ChatMessage({
           padding: 2,
           backgroundColor: isSystem
             ? theme.palette.secondary.light
-            : theme.palette.grey[50],
+            : theme.palette.common.white,
           maxWidth: '70%',
           borderRadius: !isSystem ? '24px 24px 0 24px' : '24px 24px 24px 0',
         }}

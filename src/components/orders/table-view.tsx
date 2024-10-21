@@ -16,8 +16,10 @@ import {
 } from '@mui/material';
 import { Dropbox } from 'dropbox';
 import { useState } from 'react';
+
+import { useOrders } from '../../context/orders-context';
 import { useFilePreview } from '../../hooks/use-file-preview';
-import { getTemporaryLink } from '../../services/dropbox-service'; // Nuevo import
+import { getTemporaryLink } from '../../services/dropbox-service';
 import theme from '../../theme';
 import OrderStatus from '../dashboard/order-status';
 import FileModal from '../ui/file-preview-modal';
@@ -26,7 +28,7 @@ interface TableViewProps {
   orders: any[];
 }
 
-type OrderKey = 'name' | 'businessUnit' | 'status' | 'date';
+type OrderKey = 'id' | 'businessUnit' | 'status' | 'date';
 
 // Definir un mapa de prioridad para los estados
 const statusPriority: { [key: string]: number } = {
@@ -40,17 +42,21 @@ export default function TableView({ orders }: TableViewProps) {
   const dbx = new Dropbox({
     accessToken: import.meta.env.VITE_DROPBOX_ACCESS_TOKEN,
   });
+
   const {
     selectedFile,
+    fileType,
     isModalOpen,
     error,
     handleFileClick,
     handleClosePreview,
   } = useFilePreview(dbx);
 
+  const { generateOrderId, removeFileExtension } = useOrders(); // Obtenemos las funciones del contexto
+
   // Estados para manejar el sort
-  const [orderBy, setOrderBy] = useState<OrderKey>('name'); // Columna por la cual ordenar
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc'); // Dirección del ordenamiento
+  const [orderBy, setOrderBy] = useState<OrderKey>('id');
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
 
   // Estado para almacenar los enlaces temporales obtenidos
   const [fileLinks, setFileLinks] = useState<{ [path: string]: string | null }>(
@@ -61,18 +67,16 @@ export default function TableView({ orders }: TableViewProps) {
   const handleDownload = async (file: any) => {
     const filePath = file.path_lower;
 
-    // Si ya tenemos el link en caché, lo usamos
     const cachedLink = fileLinks[filePath];
     if (cachedLink) {
       window.open(cachedLink, '_blank');
       return;
     }
 
-    // Si no, lo obtenemos y lo almacenamos en caché
     const link = await getTemporaryLink(filePath);
     if (link) {
       setFileLinks((prevLinks) => ({ ...prevLinks, [filePath]: link }));
-      window.open(link, '_blank'); // Solo abrimos si el link no es null
+      window.open(link, '_blank');
     } else {
       console.error('No se pudo obtener el enlace temporal');
     }
@@ -87,7 +91,7 @@ export default function TableView({ orders }: TableViewProps) {
 
   // Función para ordenar los datos
   const sortedOrders = [...orders].sort((a, b) => {
-    if (orderBy === 'name' || orderBy === 'businessUnit') {
+    if (orderBy === 'id' || orderBy === 'businessUnit') {
       return orderDirection === 'asc'
         ? a[orderBy].localeCompare(b[orderBy])
         : b[orderBy].localeCompare(a[orderBy]);
@@ -115,9 +119,9 @@ export default function TableView({ orders }: TableViewProps) {
             <TableRow>
               <TableCell>
                 <TableSortLabel
-                  active={orderBy === 'name'}
-                  direction={orderBy === 'name' ? orderDirection : 'asc'}
-                  onClick={() => handleSortRequest('name')}
+                  active={orderBy === 'id'}
+                  direction={orderBy === 'id' ? orderDirection : 'asc'}
+                  onClick={() => handleSortRequest('id')}
                 >
                   <Typography variant="subtitle2" fontWeight={700}>
                     #Orden
@@ -172,9 +176,10 @@ export default function TableView({ orders }: TableViewProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedOrders.map((order) => (
+            {sortedOrders.map((order, index) => (
               <TableRow key={order.id}>
-                <TableCell>{order.name}</TableCell>
+                {/* Usamos el ID generado del contexto */}
+                <TableCell>{generateOrderId(index)}</TableCell>
                 <TableCell>
                   <Typography
                     variant="caption"
@@ -189,7 +194,8 @@ export default function TableView({ orders }: TableViewProps) {
                 <TableCell>
                   <OrderStatus status={order.status} />
                 </TableCell>
-                <TableCell>{order.details}</TableCell>
+                {/* Usamos la función para eliminar la extensión */}
+                <TableCell>{removeFileExtension(order.details)}</TableCell>
                 <TableCell>{order.date}</TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleFileClick(order)}>
@@ -210,6 +216,7 @@ export default function TableView({ orders }: TableViewProps) {
         open={isModalOpen}
         onClose={handleClosePreview}
         file={selectedFile}
+        fileType={fileType}
       />
     </>
   );

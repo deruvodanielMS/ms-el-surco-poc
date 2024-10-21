@@ -112,31 +112,43 @@ export default function PieChartComponent({ orders }: { orders: Order[] }) {
         ))}
       </Box>
 
-      <ResponsiveContainer width="100%" height={400}>
-        <PieChart>
-          <Pie
-            data={pieChartData}
-            cx="50%"
-            cy="50%"
-            innerRadius={50}
-            outerRadius={100}
-            paddingAngle={0.2}
-            dataKey="value"
-            stroke="white"
-            strokeWidth={2}
-            labelLine={false} // Desactiva las líneas de referencia
-            label={renderCustomizedLabel} // Usa la función personalizada para centrar los labels dentro de los segmentos
-          >
-            {pieChartData.map((_entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </ResponsiveContainer>
+      <Box
+        sx={{
+          width: '100%',
+          // Definimos diferentes alturas para distintos tamaños de pantalla
+          height: {
+            xs: 200, // Pantallas pequeñas
+            sm: 300, // Pantallas medianas
+            md: 400, // Pantallas grandes
+          },
+        }}
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie
+              data={pieChartData}
+              cx="50%"
+              cy="50%"
+              innerRadius={50}
+              outerRadius={100}
+              paddingAngle={0.2}
+              dataKey="value"
+              stroke="white"
+              strokeWidth={2}
+              labelLine={false} // Desactiva las líneas de referencia
+              label={renderCustomizedLabel} // Usa la función personalizada para centrar los labels dentro de los segmentos
+            >
+              {pieChartData.map((_entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      </Box>
     </Box>
   );
 }

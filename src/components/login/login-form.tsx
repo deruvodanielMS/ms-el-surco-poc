@@ -75,7 +75,7 @@ export default function LoginForm() {
             boxShadow: { xs: 'none', md: '0px 0px 10px rgba(0, 0, 0, 0.1)' },
             borderRadius: { xs: 'none', md: '8px' },
             maxHeight: 'fit-content',
-            width: { xs: '80%', l: '70%' },
+            width: { xs: '80%', md: '90%', lg: '60%' },
           }}
         >
           <Stack

@@ -1,11 +1,13 @@
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, Button, Stack, Typography } from '@mui/material';
+import { useOrders } from '../../context/orders-context';
 import theme from '../../theme';
 import { Order } from '../../types/data'; // Asegúrate de que esté importado
 import CustomLink from '../ui/custom-link';
 import OrderStatus from './order-status';
 
 export default function OrderList({ orders }: { orders: Order[] }) {
+  const { removeFileExtension } = useOrders(); // Obtenemos las funciones del contexto
   return (
     <CustomLink to={'/orders'}>
       <Box
@@ -41,7 +43,7 @@ export default function OrderList({ orders }: { orders: Order[] }) {
               />
             }
           >
-            Ver Todas
+            Ver todas
           </Button>
         </Stack>
 
@@ -61,7 +63,9 @@ export default function OrderList({ orders }: { orders: Order[] }) {
             }}
           >
             <Box>
-              <Typography variant="body1">{order.details}</Typography>
+              <Typography variant="body1">
+                {removeFileExtension(order.details)}
+              </Typography>
               <Typography
                 variant="caption"
                 mt={2}

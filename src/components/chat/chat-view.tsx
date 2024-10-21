@@ -46,11 +46,12 @@ export default function ChatView({
       <Box
         ref={messagesContainerRef}
         sx={{
+          width: '100%',
           height: 400,
           overflowY: 'auto',
           padding: 2,
           marginBottom: 2,
-          backgroundColor: '#f4f4f4', // Color del fondo para simular la interfaz de chat
+          backgroundColor: '#f4f4f4',
           borderRadius: '8px',
         }}
       >
@@ -86,7 +87,7 @@ export default function ChatView({
             '&:hover': {
               backgroundColor: 'secondary.dark',
             },
-            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.4)',
           }}
           aria-label="Enviar mensaje"
         >

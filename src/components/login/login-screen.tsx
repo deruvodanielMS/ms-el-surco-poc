@@ -12,6 +12,7 @@ export default function LoginScreen() {
           alignItems: 'center',
           justifyContent: 'space-between',
           minHeight: '100vh',
+          maxWidth: '100vw',
           overflow: 'hidden',
         }}
       >
